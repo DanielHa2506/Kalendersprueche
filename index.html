@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reha-Motivation</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, #e8f3ef 0%, #d4e9f7 100%);
+      color: #1f3a4d;
+    }
+
+    .karte {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(31, 58, 77, 0.12);
+      padding: 2.5rem 2rem;
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #47ac73;
+      margin-bottom: 1.75rem;
+    }
+
+    blockquote {
+      font-size: 1.6rem;
+      line-height: 1.5;
+      font-weight: 500;
+      min-height: 4.8em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.25s ease;
+    }
+
+    button {
+      margin-top: 2rem;
+      font: inherit;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #ffffff;
+      background: #47ac73;
+      border: none;
+      border-radius: 999px;
+      padding: 0.85rem 2rem;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    button:hover { background: #3a9462; }
+    button:active { transform: scale(0.97); }
+    button:focus-visible { outline: 3px solid #a8d8bf; outline-offset: 2px; }
+
+    @media (max-width: 480px) {
+      blockquote { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="karte">
+    <h1>Reha-Motivation</h1>
+    <blockquote id="spruch">…</blockquote>
+    <button id="weiter" type="button">Nächster Spruch</button>
+  </main>
+
+  <script>
+    const sprueche = [
+      "Jeder kleine Fortschritt zählt — auch der, den du heute kaum siehst.",
+      "Heilung ist kein Sprint, sondern viele geduldige Schritte.",
+      "Dein Körper erinnert sich an jede Übung, die du machst.",
+      "Nicht die Geschwindigkeit zählt, sondern dass du nicht stehen bleibst.",
+      "Was sich heute schwer anfühlt, wird morgen ein Stück leichter.",
+      "Sei stolz auf das, was du heute geschafft hast.",
+      "Ruhe ist Teil der Heilung — nicht das Gegenteil davon.",
+      "Du bist stärker als die Ausrede, heute auszusetzen.",
+      "Vertrau dem Prozess: Dein Einsatz arbeitet für dich, auch in den Pausen.",
+      "Ein Schritt nach dem anderen bringt dich ans Ziel."
+    ];
+
+    const spruchEl = document.getElementById("spruch");
+    let letzterIndex = -1;
+
+    function zeigeZufallsspruch() {
+      let index;
+      do {
+        index = Math.floor(Math.random() * sprueche.length);
+      } while (index === letzterIndex && sprueche.length > 1);
+      letzterIndex = index;
+      spruchEl.textContent = "„" + sprueche[index] + "“";
+    }
+
+    document.getElementById("weiter").addEventListener("click", zeigeZufallsspruch);
+    zeigeZufallsspruch();
+  </script>
+</body>
+</html>
