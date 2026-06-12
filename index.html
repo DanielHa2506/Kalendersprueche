@@ -34,7 +34,37 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
       color: #47ac73;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
       margin-bottom: 1.75rem;
+    }
+
+    .chip {
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1f3a4d;
+      background: #eef3f1;
+      border: 1px solid #d6e2dc;
+      border-radius: 999px;
+      padding: 0.4rem 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .chip:hover { background: #e0ebe5; }
+    .chip:focus-visible { outline: 3px solid #a8d8bf; outline-offset: 2px; }
+
+    .chip.aktiv {
+      background: #47ac73;
+      color: #ffffff;
+      border-color: #47ac73;
     }
 
     blockquote {
@@ -74,38 +104,73 @@
 <body>
   <main class="karte">
     <h1>Reha-Motivation</h1>
+    <div class="filter" id="filter"></div>
     <blockquote id="spruch">…</blockquote>
     <button id="weiter" type="button">Nächster Spruch</button>
   </main>
 
   <script>
     const sprueche = [
-      "Jeder kleine Fortschritt zählt — auch der, den du heute kaum siehst.",
-      "Heilung ist kein Sprint, sondern viele geduldige Schritte.",
-      "Dein Körper erinnert sich an jede Übung, die du machst.",
-      "Nicht die Geschwindigkeit zählt, sondern dass du nicht stehen bleibst.",
-      "Was sich heute schwer anfühlt, wird morgen ein Stück leichter.",
-      "Sei stolz auf das, was du heute geschafft hast.",
-      "Ruhe ist Teil der Heilung — nicht das Gegenteil davon.",
-      "Du bist stärker als die Ausrede, heute auszusetzen.",
-      "Vertrau dem Prozess: Dein Einsatz arbeitet für dich, auch in den Pausen.",
-      "Ein Schritt nach dem anderen bringt dich ans Ziel."
+      { text: "Jeder kleine Fortschritt zählt — auch der, den du heute kaum siehst.", kategorie: "Fortschritt" },
+      { text: "Heilung ist kein Sprint, sondern viele geduldige Schritte.", kategorie: "Geduld" },
+      { text: "Dein Körper erinnert sich an jede Übung, die du machst.", kategorie: "Fortschritt" },
+      { text: "Nicht die Geschwindigkeit zählt, sondern dass du nicht stehen bleibst.", kategorie: "Durchhalten" },
+      { text: "Was sich heute schwer anfühlt, wird morgen ein Stück leichter.", kategorie: "Geduld" },
+      { text: "Sei stolz auf das, was du heute geschafft hast.", kategorie: "Fortschritt" },
+      { text: "Ruhe ist Teil der Heilung — nicht das Gegenteil davon.", kategorie: "Ruhe" },
+      { text: "Du bist stärker als die Ausrede, heute auszusetzen.", kategorie: "Durchhalten" },
+      { text: "Vertrau dem Prozess: Dein Einsatz arbeitet für dich, auch in den Pausen.", kategorie: "Ruhe" },
+      { text: "Ein Schritt nach dem anderen bringt dich ans Ziel.", kategorie: "Durchhalten" }
     ];
 
     const spruchEl = document.getElementById("spruch");
-    let letzterIndex = -1;
+    const filterEl = document.getElementById("filter");
 
-    function zeigeZufallsspruch() {
-      let index;
-      do {
-        index = Math.floor(Math.random() * sprueche.length);
-      } while (index === letzterIndex && sprueche.length > 1);
-      letzterIndex = index;
-      spruchEl.textContent = "„" + sprueche[index] + "“";
+    let aktiveKategorie = "Alle";
+    let letzterText = null;
+
+    // Kategorien aus den Daten ableiten (Reihenfolge des ersten Auftretens), "Alle" voran
+    const kategorien = ["Alle", ...sprueche.reduce((acc, s) => {
+      if (!acc.includes(s.kategorie)) acc.push(s.kategorie);
+      return acc;
+    }, [])];
+
+    function gefilterteSprueche() {
+      return aktiveKategorie === "Alle"
+        ? sprueche
+        : sprueche.filter(s => s.kategorie === aktiveKategorie);
     }
 
+    function zeigeZufallsspruch() {
+      const liste = gefilterteSprueche();
+      let spruch;
+      do {
+        spruch = liste[Math.floor(Math.random() * liste.length)];
+      } while (spruch.text === letzterText && liste.length > 1);
+      letzterText = spruch.text;
+      spruchEl.textContent = "„" + spruch.text + "“";
+    }
+
+    function setzeKategorie(kategorie) {
+      aktiveKategorie = kategorie;
+      filterEl.querySelectorAll(".chip").forEach(chip => {
+        chip.classList.toggle("aktiv", chip.dataset.kategorie === kategorie);
+      });
+      zeigeZufallsspruch();
+    }
+
+    kategorien.forEach(kategorie => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip";
+      chip.dataset.kategorie = kategorie;
+      chip.textContent = kategorie;
+      chip.addEventListener("click", () => setzeKategorie(kategorie));
+      filterEl.appendChild(chip);
+    });
+
     document.getElementById("weiter").addEventListener("click", zeigeZufallsspruch);
-    zeigeZufallsspruch();
+    setzeKategorie("Alle");
   </script>
 </body>
 </html>
