@@ -1,3 +1,0 @@
-# Kalendersprueche
-
-Sammlung von Kalenderspruechen.
