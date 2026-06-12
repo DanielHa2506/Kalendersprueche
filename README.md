@@ -1,3 +1,3 @@
-# Kalendersprüche
+# Kalendersprueche
 
-Sammlung von Kalendersprüchen.
+Sammlung von Kalenderspruechen.
